@@ -1,0 +1,2 @@
+Data bersumber dari berkas yang disimpan dalam direktori storage. Anda tidak diizinkan untuk mengubah dan menyertakan berkas pada direktori storage ke central repository (GitHub). Tambahkan direktori ini dalam .gitignore anda. Perhatikan contoh berikut. apa maksud perintah diatas.
+apa kegunaan fopen

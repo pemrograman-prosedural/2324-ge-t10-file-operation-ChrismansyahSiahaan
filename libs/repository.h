@@ -11,4 +11,7 @@
  *
  */
 
+struct dorm_t create_dorm_repository(char *input);
+
+struct student_t create_student_repository(char *input);
 #endif
