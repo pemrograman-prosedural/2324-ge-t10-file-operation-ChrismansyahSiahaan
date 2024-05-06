@@ -60,10 +60,10 @@ void print_student_detail(struct student_t mhs)
   printf("%s\n", mhs.dorm->name);
 }
 
-int find_id(char *nim, int sizestd, struct student_t *mhs)
+int find_id(char *nim, int zstd, struct student_t *mhs)
 {
   int find_id = -1;
-  for (int m = 0; m < sizestd; m++)
+  for (int m = 0; m < zstd; m++)
   {
     if (strcmp(nim, mhs[m].id) == 0)
     {
@@ -73,10 +73,10 @@ int find_id(char *nim, int sizestd, struct student_t *mhs)
   return find_id;
 }
 
-void assign_student(struct dorm_t *drm, struct student_t *mhs, char *nim, char *asrama, int sizestd, int sizedrm, int find_id(char *nim, int sizestd, struct student_t *mhs), int find_dorm(char *asrama, int sizedrm, struct dorm_t *drm))
+void assign_student(struct dorm_t *drm, struct student_t *mhs, char *nim, char *asrama, int zstd, int zdrm, int find_id(char *nim, int zstd, struct student_t *mhs), int find_dorm(char *asrama, int zdrm, struct dorm_t *drm))
 {
-  int maha = find_id(nim, sizestd, mhs);
-  int asra = find_dorm(asrama, sizedrm, drm);
+  int maha = find_id(nim, zstd, mhs);
+  int asra = find_dorm(asrama, zdrm, drm);
   if (maha >= 0 && asra >= 0 && drm[asra].capacity != drm[asra].residents_num && mhs[maha].gender == drm[asra].gender)
   {
     strcpy(mhs[maha].dorm->name, asrama);
@@ -84,13 +84,13 @@ void assign_student(struct dorm_t *drm, struct student_t *mhs, char *nim, char *
   }
 }
 
-void move_student(struct dorm_t *drm, struct student_t *mhs, char *nim, char *asrama, int sizestd, int sizedrm, int find_id(char *nim, int sizestd, struct student_t *mhs), int find_dorm(char *asrama, int sizedrm, struct dorm_t *drm))
+void move_student(struct dorm_t *drm, struct student_t *mhs, char *nim, char *asrama, int zstd, int zdrm, int find_id(char *nim, int zstd, struct student_t *mhs), int find_dorm(char *asrama, int zdrm, struct dorm_t *drm))
 {
-  int maha = find_id(nim, sizestd, mhs);
+  int maha = find_id(nim, zstd, mhs);
   char before[20];
   strcpy(before, mhs[maha].dorm->name);
-  int asrabefore = find_dorm(before, sizedrm, drm);
-  int asraafter = find_dorm(asrama, sizedrm, drm);
+  int asrabefore = find_dorm(before, zdrm, drm);
+  int asraafter = find_dorm(asrama, zdrm, drm);
   if (maha >= 0 && asrabefore >= 0 && asraafter >= 0 && drm[asraafter].capacity != drm[asraafter].residents_num && mhs[maha].gender == drm[asraafter].gender)
   {
     drm[asrabefore].residents_num--;
@@ -104,10 +104,10 @@ void move_student(struct dorm_t *drm, struct student_t *mhs, char *nim, char *as
   }
 }
 
-void dorm_empty(char *asrama, int sizestd, int sizedrm, struct student_t *mhs, struct dorm_t *drm, int find_dorm(char *asrama, int sizedrm, struct dorm_t *drm))
+void dorm_empty(char *asrama, int zstd, int zdrm, struct student_t *mhs, struct dorm_t *drm, int find_dorm(char *asrama, int zdrm, struct dorm_t *drm))
 {
-  int asra = find_dorm(asrama, sizedrm, drm);
-  for (int m = 0; m < sizestd; m++)
+  int asra = find_dorm(asrama, zdrm, drm);
+  for (int m = 0; m < zstd; m++)
   {
     if (strcmp(asrama, mhs[m].dorm->name) == 0)
     {

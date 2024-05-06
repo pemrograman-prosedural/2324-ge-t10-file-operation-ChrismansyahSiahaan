@@ -12,7 +12,7 @@
 struct dorm_t create_dorm_repository(char *input)
 {
   struct dorm_t drm;
-  strcpy(drm.name, strtok(NULL, "|"));
+  strcpy(drm.name, strtok(input, "|"));
   drm.capacity = atoi(strtok(NULL, "|"));
   char *yoru = strtok(NULL, "|");
   if (strcmp(yoru, "male") == 0)
@@ -23,14 +23,14 @@ struct dorm_t create_dorm_repository(char *input)
   {
     drm.gender = GENDER_FEMALE;
   }
-  drm.residents_num=0;
+  drm.residents_num = 0;
   return drm;
 }
 
 struct student_t create_student_repository(char *input)
 {
   struct student_t mhs;
-  strcpy(mhs.id, strtok(NULL, "|"));
+  strcpy(mhs.id, strtok(input, "|"));
   strcpy(mhs.name, strtok(NULL, "|"));
   strcpy(mhs.year, strtok(NULL, "|"));
   char *yoru = strtok(NULL, "|");

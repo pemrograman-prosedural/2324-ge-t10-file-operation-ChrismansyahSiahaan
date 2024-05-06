@@ -11,15 +11,14 @@
 
 int main(int _argc, char **_argv)
 {
-  char input[100];
+  char input[75];
+  int zdrm = 0;
   int size = 0;
-  int size2 = 0;
-  int sizestd = 0;
-  int sizedrm = 0;
-  char *token;
-  struct student_t *mhs = malloc(size2 * sizeof(struct student_t));
   struct dorm_t *drm = malloc(size * sizeof(struct dorm_t));
-
+  int zstd = 0;
+  int sizee = 0;
+  struct student_t *mhs = malloc(sizee * sizeof(struct student_t));
+  char *token;
 
   FILE *mahasiswa;
   FILE *asrama;
@@ -31,8 +30,8 @@ int main(int _argc, char **_argv)
     size++;
     drm = realloc(drm, size * sizeof(struct dorm_t));
     fscanf(asrama, "%[^\n]\n", input);
-    drm[sizedrm] = create_dorm_repository(input);
-    sizedrm++;
+    drm[zdrm] = create_dorm_repository(input);
+    zdrm++;
     if (feof(asrama))
     {
       break;
@@ -41,11 +40,11 @@ int main(int _argc, char **_argv)
 
   while (1)
   {
-    size2++;
-    mhs = realloc(mhs, size2 * sizeof(struct student_t));
+    sizee++;
+    mhs = realloc(mhs, sizee * sizeof(struct student_t));
     fscanf(mahasiswa, "%[^\n]\n", input);
-    mhs[sizestd] = create_student_repository(input);
-    sizestd++;
+    mhs[zstd] = create_student_repository(input);
+    zstd++;
     if (feof(mahasiswa))
     {
       break;
@@ -76,40 +75,40 @@ int main(int _argc, char **_argv)
     {
       size++;
       drm = realloc(drm, size * sizeof(struct dorm_t));
-      drm[sizedrm] = create_dorm(input);
-      sizedrm++;
+      drm[zdrm] = create_dorm(input);
+      zdrm++;
     }
     else if (strcmp(token, "dorm-print-all") == 0)
     {
-      for (int m = 0; m < sizedrm; m++)
+      for (int m = 0; m < zdrm; m++)
       {
         print_dorm(drm[m]);
       }
     }
     else if (strcmp(token, "dorm-print-all-detail") == 0)
     {
-      for (int m = 0; m < sizedrm; m++)
+      for (int m = 0; m < zdrm; m++)
       {
         print_dorm_detail(drm[m]);
       }
     }
     else if (strcmp(token, "student-add") == 0)
     {
-      size2++;
-      mhs = realloc(mhs, size2 * sizeof(struct student_t));
-      mhs[sizestd] = create_student(input);
-      sizestd++;
+      sizee++;
+      mhs = realloc(mhs, sizee * sizeof(struct student_t));
+      mhs[zstd] = create_student(input);
+      zstd++;
     }
     else if (strcmp(token, "student-print-all") == 0)
     {
-      for (int m = 0; m < sizestd; m++)
+      for (int m = 0; m < zstd; m++)
       {
         print_student(mhs[m]);
       }
     }
     else if (strcmp(token, "student-print-all-detail") == 0)
     {
-      for (int m = 0; m < sizestd; m++)
+      for (int m = 0; m < zstd; m++)
       {
         print_student_detail(mhs[m]);
       }
@@ -118,18 +117,18 @@ int main(int _argc, char **_argv)
     {
       char *nim = strtok(NULL, "#");
       char *asrama = strtok(NULL, "#");
-      assign_student(drm, mhs, nim, asrama, sizestd, sizedrm, find_id, find_dorm);
+      assign_student(drm, mhs, nim, asrama, zstd, zdrm, find_id, find_dorm);
     }
     else if (strcmp(token, "move-student") == 0)
     {
       char *nim = strtok(NULL, "#");
       char *asrama = strtok(NULL, "#");
-      move_student(drm, mhs, nim, asrama, sizestd, sizedrm, find_id, find_dorm);
+      move_student(drm, mhs, nim, asrama, zstd, zdrm, find_id, find_dorm);
     }
     else if (strcmp(token, "dorm-empty") == 0)
     {
       char *asrama = strtok(NULL, "#");
-      dorm_empty(asrama, sizestd, sizedrm, mhs, drm, find_dorm);
+      dorm_empty(asrama, zstd, zdrm, mhs, drm, find_dorm);
     }
   }
   free(mhs);
