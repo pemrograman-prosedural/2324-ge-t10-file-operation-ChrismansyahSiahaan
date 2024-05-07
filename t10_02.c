@@ -9,130 +9,147 @@
 #include "./libs/gender.h"
 #include "./libs/repository.h"
 
-int main(int _argc, char **_argv)
-{
-  char input[75];
-  int zdrm = 0;
-  int size = 0;
-  struct dorm_t *drm = malloc(size * sizeof(struct dorm_t));
-  int zstd = 0;
-  int sizee = 0;
-  struct student_t *mhs = malloc(sizee * sizeof(struct student_t));
-  char *token;
+#define MAX_INPUT_LENGTH 75
+#define MAX_TOKEN_LENGTH 10
 
-  FILE *mahasiswa;
-  FILE *asrama;
-  asrama = fopen("storage/dorm-repository.txt", "r");
-  mahasiswa = fopen("storage/student-repository.txt", "r");
+typedef enum {
+    DORM_ADD,
+    DORM_PRINT_ALL,
+    DORM_PRINT_ALL_DETAIL,
+    STUDENT_ADD,
+    STUDENT_PRINT_ALL,
+    STUDENT_PRINT_ALL_DETAIL,
+    ASSIGN_STUDENT,
+    MOVE_STUDENT,
+    DORM_EMPTY,
+    EXIT
+} Command;
 
-  while (1)
-  {
-    size++;
-    drm = realloc(drm, size * sizeof(struct dorm_t));
-    fscanf(asrama, "%[^\n]\n", input);
-    drm[zdrm] = create_dorm_repository(input);
-    zdrm++;
-    if (feof(asrama))
-    {
-      break;
+void handle_command(Command command, char *input, struct dorm_t *drm, int *zdrm, struct student_t *mhs, int *zstd) {
+    switch (command) {
+        case DORM_ADD:
+            (*zdrm)++;
+            drm = realloc(drm, (*zdrm) * sizeof(struct dorm_t));
+            drm[(*zdrm) - 1] = create_dorm(input);
+            break;
+        case DORM_PRINT_ALL:
+            for (int i = 0; i < *zdrm; i++) {
+                print_dorm(drm[i]);
+            }
+            break;
+        case DORM_PRINT_ALL_DETAIL:
+            for (int i = 0; i < *zdrm; i++) {
+                print_dorm_detail(drm[i]);
+            }
+            break;
+        case STUDENT_ADD:
+            (*zstd)++;
+            mhs = realloc(mhs, (*zstd) * sizeof(struct student_t));
+            mhs[(*zstd) - 1] = create_student(input);
+            break;
+        case STUDENT_PRINT_ALL:
+            for (int i = 0; i < *zstd; i++) {
+                print_student(mhs[i]);
+            }
+            break;
+        case STUDENT_PRINT_ALL_DETAIL:
+            for (int i = 0; i < *zstd; i++) {
+                print_student_detail(mhs[i]);
+            }
+            break;
+        case ASSIGN_STUDENT:
+            char *nim = strtok(NULL, "#");
+            char *asrama = strtok(NULL, "#");
+            assign_student(drm, mhs, nim, asrama, *zstd, *zdrm, find_id, find_dorm);
+            break;
+        case MOVE_STUDENT:
+            char *nim = strtok(NULL, "#");
+            char *asrama = strtok(NULL, "#");
+            move_student(drm, mhs, nim, asrama, *zstd, *zdrm, find_id, find_dorm);
+            break;
+        case DORM_EMPTY:
+            char *asrama = strtok(NULL, "#");
+            dorm_empty(asrama, *zstd, *zdrm, mhs, drm, find_dorm);
+            break;
+        default:
+            printf("Invalid command\n");
+            break;
     }
-  }
+}
 
-  while (1)
-  {
-    sizee++;
-    mhs = realloc(mhs, sizee * sizeof(struct student_t));
-    fscanf(mahasiswa, "%[^\n]\n", input);
-    mhs[zstd] = create_student_repository(input);
-    zstd++;
-    if (feof(mahasiswa))
-    {
-      break;
-    }
-  }
+int main(int argc, char **argv) {
+    char input[MAX_INPUT_LENGTH];
+    int zdrm = 0;
+    struct dorm_t *drm = malloc(zdrm * sizeof(struct dorm_t));
+    int zstd = 0;
+    struct student_t *mhs = malloc(zstd * sizeof(struct student_t));
 
-  while (1 == 1)
-  {
-    fgets(input, sizeof input, stdin);
-    while (1)
-    {
-      if (input[strlen(input) - 1] == '\n' || input[strlen(input) - 1] == '\r')
-      {
-        input[strlen(input) - 1] = '\0';
-      }
-      else
-      {
-        break;
-      }
+    FILE *mahasiswa;
+    FILE *asrama;
+    asrama = fopen("storage/dorm-repository.txt", "r");
+    mahasiswa = fopen("storage/student-repository.txt", "r");
+
+    while (1) {
+        zdrm++;
+        drm = realloc(drm, zdrm * sizeof(struct dorm_t));
+        fscanf(asrama, "%[^\n]\n", input);
+        drm[zdrm - 1] = create_dorm_repository(input);
+        if (feof(asrama)) {
+            break;
+        }
     }
 
-    token = strtok(input, "#");
-    if (strcmp(token, "---") == 0)
-    {
-      break;
+    while (1) {
+        zstd++;
+        mhs = realloc(mhs, zstd * sizeof(struct student_t));
+        fscanf(mahasiswa, "%[^\n]\n", input);
+        mhs[zstd - 1] = create_student_repository(input);
+        if (feof(mahasiswa)) {
+            break;
+        }
     }
-    else if (strcmp(token, "dorm-add") == 0)
-    {
-      size++;
-      drm = realloc(drm, size * sizeof(struct dorm_t));
-      drm[zdrm] = create_dorm(input);
-      zdrm++;
-    }
-    else if (strcmp(token, "dorm-print-all") == 0)
-    {
-      for (int m = 0; m < zdrm; m++)
-      {
-        print_dorm(drm[m]);
-      }
-    }
-    else if (strcmp(token, "dorm-print-all-detail") == 0)
-    {
-      for (int m = 0; m < zdrm; m++)
-      {
-        print_dorm_detail(drm[m]);
-      }
-    }
-    else if (strcmp(token, "student-add") == 0)
-    {
-      sizee++;
-      mhs = realloc(mhs, sizee * sizeof(struct student_t));
-      mhs[zstd] = create_student(input);
-      zstd++;
-    }
-    else if (strcmp(token, "student-print-all") == 0)
-    {
-      for (int m = 0; m < zstd; m++)
-      {
-        print_student(mhs[m]);
-      }
-    }
-    else if (strcmp(token, "student-print-all-detail") == 0)
-    {
-      for (int m = 0; m < zstd; m++)
-      {
-        print_student_detail(mhs[m]);
-      }
-    }
-    else if (strcmp(token, "assign-student") == 0)
-    {
-      char *nim = strtok(NULL, "#");
-      char *asrama = strtok(NULL, "#");
-      assign_student(drm, mhs, nim, asrama, zstd, zdrm, find_id, find_dorm);
-    }
-    else if (strcmp(token, "move-student") == 0)
-    {
-      char *nim = strtok(NULL, "#");
-      char *asrama = strtok(NULL, "#");
-      move_student(drm, mhs, nim, asrama, zstd, zdrm, find_id, find_dorm);
-    }
-    else if (strcmp(token, "dorm-empty") == 0)
-    {
-      char *asrama = strtok(NULL, "#");
-      dorm_empty(asrama, zstd, zdrm, mhs, drm, find_dorm);
-    }
-  }
-  free(mhs);
-  free(drm);
 
-  return 0;
+    while (1) {
+        fgets(input, MAX_INPUT_LENGTH, stdin);
+        while (1) {
+            if (input[strlen(input) - 1] == '\n' || input[strlen(input) - 1] == '\r') {
+                input[strlen(input) - 1] = '\0';
+            } else {
+                break;
+            }
+        }
+
+        char *token = strtok(input, "#");
+        Command command;
+        if (strcmp(token, "---") == 0) {
+            break;
+        } else if (strcmp(token, "dorm-add") == 0) {
+            command = DORM_ADD;
+        } else if (strcmp(token, "dorm-print-all") == 0) {
+            command = DORM_PRINT_ALL;
+        } else if (strcmp(token, "dorm-print-all-detail") == 0) {
+            command = DORM_PRINT_ALL_DETAIL;
+        } else if (strcmp(token, "student-add") == 0) {
+            command = STUDENT_ADD;
+        } else if (strcmp(token, "student-print-all") == 0) {
+            command = STUDENT_PRINT_ALL;
+        } else if (strcmp(token, "student-print-all-detail") == 0) {
+            command = STUDENT_PRINT_ALL_DETAIL;
+        } else if (strcmp(token, "assign-student") == 0) {
+            command = ASSIGN_STUDENT;
+        } else if (strcmp(token, "move-student") == 0) {
+            command = MOVE_STUDENT;
+        } else if (strcmp(token, "dorm-empty") == 0) {
+            command = DORM_EMPTY;
+        } else {
+            command = EXIT;
+        }
+
+        handle_command(command, input, drm, &zdrm, mhs, &zstd);
+    }
+
+    free(mhs);
+    free(drm);
+
+    return 0;
 }
